@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恋爱占有欲测试 - 了解你的情感依赖程度</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9c27b0',
+                        secondary: '#e91e63',
+                        light: '#f3e5f5',
+                        dark: '#4a148c',
+                        success: '#4caf50',
+                        warning: '#ff9800',
+                        danger: '#f44336',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-in-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            .bg-gradient-love {
+                background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .progress-bar {
+                transition: width 0.5s ease-in-out;
+            }
+            .option-card {
+                transition: all 0.2s ease;
+            }
+            .option-card:hover {
+                transform: scale(1.02);
+            }
+            .option-card.selected {
+                border-color: theme('colors.primary');
+                background-color: theme('colors.light');
+            }
+            .result-card {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.5s ease;
+            }
+            .result-card.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .heart-beat {
+                animation: heartBeat 1.5s infinite;
+            }
+            @keyframes heartBeat {
+                0% { transform: scale(1); }
+                14% { transform: scale(1.1); }
+                28% { transform: scale(1); }
+                42% { transform: scale(1.15); }
+                70% { transform: scale(1); }
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- 顶部导航栏 -->
+    <nav class="bg-white shadow-md fixed w-full z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-heart text-secondary text-2xl heart-beat"></i>
+                <span class="text-xl font-bold text-primary">恋爱占有欲测试</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="text-gray-700 hover:text-primary transition-colors" id="nav-about">关于测试</a>
+                <a href="#" class="text-gray-700 hover:text-primary transition-colors" id="nav-faq">常见问题</a>
+                <a href="#" class="text-gray-700 hover:text-primary transition-colors" id="nav-contact">联系我们</a>
+            </div>
+            <button class="md:hidden text-gray-700 focus:outline-none" id="mobile-menu-button">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+        </div>
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-white shadow-lg absolute w-full" id="mobile-menu">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#" class="text-gray-700 hover:text-primary py-2 transition-colors">关于测试</a>
+                <a href="#" class="text-gray-700 hover:text-primary py-2 transition-colors">常见问题</a>
+                <a href="#" class="text-gray-700 hover:text-primary py-2 transition-colors">联系我们</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 pt-24 pb-16">
+        <!-- 欢迎区域 -->
+        <section id="welcome-section" class="animate-fade-in">
+            <div class="relative rounded-xl overflow-hidden mb-8">
+                <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/8fd568ff1b994711b4e419124ce7ecc0~tplv-a9rns2rl98-image.image?rcl=20251114212353A4D632152F7ABF1FEB72&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1765718655&x-signature=eiM4TEom6%2BDEKN41sU1TwvJo%2BNY%3D" 
+                     alt="恋爱心理学测试" 
+                     class="w-full h-64 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
+                    <h1 class="text-3xl md:text-4xl font-bold text-white text-shadow mb-2">恋爱占有欲测试</h1>
+                    <p class="text-lg text-white/90 max-w-2xl">探索你在恋爱关系中的情感依赖程度，了解自己的占有欲倾向，获得健康恋爱关系的建议。</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">测试介绍</h2>
+                <p class="text-gray-600 mb-4">
+                    本测试基于心理学研究，从情感依赖、控制倾向、嫉妒反应等多个维度评估你在恋爱关系中的占有欲程度。
+                    通过回答20个问题，你将获得个性化的分析报告和改善建议。
+                </p>
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <div class="flex items-center text-gray-700">
+                        <i class="fa fa-clock-o text-primary mr-2"></i>
+                        <span>预计用时: 5-8分钟</span>
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <i class="fa fa-bar-chart text-primary mr-2"></i>
+                        <span>多维度分析</span>
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <i class="fa fa-lock text-primary mr-2"></i>
+                        <span>结果保密</span>
+                    </div>
+                </div>
+                <button id="start-test-btn" class="bg-gradient-love text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50">
+                    开始测试
+                </button>
+            </div>
+        </section>
+
+        <!-- 测试问卷区域 -->
+        <section id="test-section" class="hidden animate-fade-in">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">恋爱占有欲测试问卷</h2>
+                    <div class="text-gray-600">
+                        <span id="question-number">1</span>/20
+                    </div>
+                </div>
+                
+                <!-- 进度条 -->
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-8">
+                    <div id="progress-bar" class="bg-gradient-love h-2.5 rounded-full progress-bar" style="width: 5%"></div>
+                </div>
+                
+                <!-- 问题内容 -->
+                <div id="question-container" class="mb-8">
+                    <h3 id="question-text" class="text-xl font-medium text-gray-800 mb-6">当你的伴侣与异性朋友外出时，你会有什么感受？</h3>
+                    
+                    <div id="options-container" class="space-y-4">
+                        <!-- 选项将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 导航按钮 -->
+                <div class="flex justify-between">
+                    <button id="prev-btn" class="bg-gray-200 text-gray-700 font-medium py-2 px-6 rounded-lg hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <i class="fa fa-arrow-left mr-2"></i>上一题
+                    </button>
+                    <button id="next-btn" class="bg-gradient-love text-white font-medium py-2 px-6 rounded-lg hover:opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        下一题<i class="fa fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 结果展示区域 -->
+        <section id="result-section" class="hidden animate-fade-in">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">测试结果分析</h2>
+                
+                <!-- 总体评分 -->
+                <div class="mb-8 text-center">
+                    <div class="inline-block relative">
+                        <div class="w-48 h-48 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                            <div id="result-score-circle" class="absolute inset-0 rounded-full" style="clip: rect(0px, 48px, 48px, 24px);"></div>
+                            <div class="relative z-10">
+                                <span id="result-score" class="text-5xl font-bold text-primary">0</span>
+                                <span class="text-xl text-gray-600">/100</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 id="result-title" class="text-2xl font-bold mt-4 mb-2">中等占有欲</h3>
+                    <p id="result-summary" class="text-gray-600 max-w-2xl mx-auto">
+                        你在恋爱关系中表现出中等程度的占有欲，能够在关心伴侣和尊重个人空间之间取得较好的平衡。
+                    </p>
+                </div>
+                
+                <!-- 维度分析 -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">维度分析</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- 情感依赖 -->
+                        <div class="result-card bg-white rounded-lg shadow p-4 border-l-4 border-primary">
+                            <h4 class="font-bold text-gray-800 mb-2">情感依赖</h4>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                                <div id="dependency-bar" class="bg-primary h-2.5 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p id="dependency-text" class="text-sm text-gray-600">
+                                你对伴侣有适度的情感依赖，能够在保持自我独立性的同时享受亲密关系。
+                            </p>
+                        </div>
+                        
+                        <!-- 控制倾向 -->
+                        <div class="result-card bg-white rounded-lg shadow p-4 border-l-4 border-secondary">
+                            <h4 class="font-bold text-gray-800 mb-2">控制倾向</h4>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                                <div id="control-bar" class="bg-secondary h-2.5 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p id="control-text" class="text-sm text-gray-600">
+                                你在关系中表现出一定的控制欲，但通常能够尊重伴侣的个人选择和自由。
+                            </p>
+                        </div>
+                        
+                        <!-- 嫉妒反应 -->
+                        <div class="result-card bg-white rounded-lg shadow p-4 border-l-4 border-purple-500">
+                            <h4 class="font-bold text-gray-800 mb-2">嫉妒反应</h4>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                                <div id="jealousy-bar" class="bg-purple-500 h-2.5 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p id="jealousy-text" class="text-sm text-gray-600">
+                                你在某些情况下会感到嫉妒，但通常能够理性处理这些情绪，不会过度反应。
+                            </p>
+                        </div>
+                        
+                        <!-- 信任程度 -->
+                        <div class="result-card bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
+                            <h4 class="font-bold text-gray-800 mb-2">信任程度</h4>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                                <div id="trust-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p id="trust-text" class="text-sm text-gray-600">
+                                你对伴侣有基本的信任，但在某些情况下可能会产生疑虑，需要更多的安全感。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 详细分析 -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">详细分析</h3>
+                    <div id="detailed-analysis" class="bg-gray-50 rounded-lg p-4 text-gray-700">
+                        <!-- 详细分析内容将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 改善建议 -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">改善建议</h3>
+                    <div id="improvement-tips" class="space-y-3">
+                        <!-- 改善建议将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 分享按钮 -->
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <button id="share-wechat" class="flex items-center bg-green-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-green-600 transition-colors focus:outline-none">
+                        <i class="fa fa-weixin mr-2"></i>分享到微信
+                    </button>
+                    <button id="share-weibo" class="flex items-center bg-red-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-red-600 transition-colors focus:outline-none">
+                        <i class="fa fa-weibo mr-2"></i>分享到微博
+                    </button>
+                    <button id="save-result" class="flex items-center bg-blue-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors focus:outline-none">
+                        <i class="fa fa-download mr-2"></i>保存结果
+                    </button>
+                    <button id="retake-test" class="flex items-center bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors focus:outline-none">
+                        <i class="fa fa-refresh mr-2"></i>重新测试
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4">关于我们</h3>
+                    <p class="text-gray-400">
+                        恋爱占有欲测试是一个基于心理学研究的情感评估工具，旨在帮助人们更好地了解自己在恋爱关系中的行为模式和情感需求。
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">关于测试</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">常见问题</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">隐私政策</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">联系我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">联系我们</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope mr-2"></i>
+                            <span>contact@lovetest.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-weixin mr-2"></i>
+                            <span>LoveTest_Official</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500">
+                <p>&copy; 2025 恋爱占有欲测试 - 所有权利保留</p>
+                <p class="mt-2 text-sm">本测试仅供参考，不构成专业心理咨询建议</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 分享弹窗 -->
+    <div id="share-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">分享测试结果</h3>
+                <button id="close-share-modal" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="mb-6">
+                <p class="text-gray-600 mb-4">通过以下方式分享你的测试结果：</p>
+                <div class="flex justify-center space-x-6">
+                    <button class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white mb-2">
+                            <i class="fa fa-weixin text-2xl"></i>
+                        </div>
+                        <span class="text-sm text-gray-600">微信</span>
+                    </button>
+                    <button class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center text-white mb-2">
+                            <i class="fa fa-weibo text-2xl"></i>
+                        </div>
+                        <span class="text-sm text-gray-600">微博</span>
+                    </button>
+                    <button class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white mb-2">
+                            <i class="fa fa-link text-2xl"></i>
+                        </div>
+                        <span class="text-sm text-gray-600">复制链接</span>
+                    </button>
+                </div>
+            </div>
+            <div class="bg-gray-100 p-4 rounded-lg">
+                <p class="text-center text-gray-600 text-sm">
+                    我的恋爱占有欲测试结果：中等占有欲 (65分)
+                </p>
+                <div class="mt-2 flex justify-center">
+                    <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/69faf732e51843aeb448c4267cbd0f48~tplv-a9rns2rl98-image.image?rcl=20251114212353A4D632152F7ABF1FEB72&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1765718673&x-signature=abF89Hg0MKQ3wg%2BJpTQGGfW1SM4%3D" 
+                         alt="测试结果" 
+                         class="w-24 h-24 object-contain">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 测试问题数据
+        const questions = [
+            {
+                text: "当你的伴侣与异性朋友外出时，你会有什么感受？",
+                options: [
+                    { text: "完全信任，不会有任何不安", score: 1, dimension: "trust" },
+                    { text: "有一点好奇，但不会过多干涉", score: 2, dimension: "jealousy" },
+                    { text: "会感到有些不安，希望知道详情", score: 3, dimension: "jealousy" },
+                    { text: "非常担心，可能会频繁联系确认情况", score: 4, dimension: "jealousy" },
+                    { text: "极度不安，可能会要求伴侣取消行程", score: 5, dimension: "control" }
+                ]
+            },
+            {
+                text: "你是否会查看伴侣的手机或社交媒体消息？",
+                options: [
+                    { text: "从不查看，完全信任", score: 1, dimension: "trust" },
+                    { text: "偶尔会有好奇，但尊重隐私", score: 2, dimension: "trust" },
+                    { text: "在特定情况下会查看（如发现异常）", score: 3, dimension: "control" },
+                    { text: "经常查看，希望了解伴侣的社交情况", score: 4, dimension: "control" },
+                    { text: "几乎每天都会查看，认为这是必要的", score: 5, dimension: "control" }
+                ]
+            },
+            {
+                text: "当伴侣赞美他人时，你的感受是？",
+                options: [
+                    { text: "为伴侣的欣赏眼光感到高兴", score: 1, dimension: "jealousy" },
+                    { text: "无所谓，这只是正常的社交互动", score: 2, dimension: "jealousy" },
+                    { text: "有一点不舒服，但不会表现出来", score: 3, dimension: "jealousy" },
+                    { text: "明显感到不安，可能会表现出不满", score: 4, dimension: "jealousy" },
+                    { text: "非常生气，认为伴侣不应该赞美他人", score: 5, dimension: "jealousy" }
+                ]
+            },
+            {
+                text: "你希望伴侣每天与你相处的时间是？",
+                options: [
+                    { text: "尊重彼此的个人空间，不刻意要求", score: 1, dimension: "dependency" },
+                    { text: "每天有一定时间相处，但也需要各自的空间", score: 2, dimension: "dependency" },
+                    { text: "希望大部分空闲时间都能在一起", score: 3, dimension: "dependency" },
+                    { text: "几乎所有空闲时间都希望在一起", score: 4, dimension: "dependency" },
+                    { text: "希望24小时都能在一起，不喜欢分开", score: 5, dimension: "dependency" }
+                ]
+            },
+            {
+                text: "当伴侣没有及时回复你的消息时，你会？",
+                options: [
+                    { text: "理解对方可能在忙，耐心等待", score: 1, dimension: "dependency" },
+                    { text: "稍微有点担心，但不会过多打扰", score: 2, dimension: "dependency" },
+                    { text: "会多发几条消息，直到对方回复", score: 3, dimension: "dependency" },
+                    { text: "感到焦虑，可能会打电话确认情况", score: 4, dimension: "dependency" },
+                    { text: "非常不安，可能会不断联系直到得到回应", score: 5, dimension: "dependency" }
+                ]
+            },
+            {
+                text: "你是否会对伴侣的穿着或行为提出要求？",
+                options: [
+                    { text: "完全尊重伴侣的个人选择", score: 1, dimension: "control" },
+                    { text: "偶尔会给出建议，但尊重伴侣的决定", score: 2, dimension: "control" },
+                    { text: "在特定场合会提出要求（如正式场合）", score: 3, dimension: "control" },
+                    { text: "经常对伴侣的穿着和行为提出要求", score: 4, dimension: "control" },
+                    { text: "几乎对伴侣的所有穿着和行为都有严格要求", score: 5, dimension: "control" }
+                ]
+            },
+            {
+                text: "当伴侣想要单独参加社交活动时，你会？",
+                options: [
+                    { text: "完全支持，鼓励伴侣独立社交", score: 1, dimension: "control" },
+                    { text: "理解并接受，偶尔会询问活动内容", score: 2, dimension: "control" },
+                    { text: "有些犹豫，但最终会同意", score: 3, dimension: "control" },
+                    { text: "不太愿意，但可能会勉强同意", score: 4, dimension: "control" },
+                    { text: "强烈反对，希望伴侣取消行程", score: 5, dimension: "control" }
+                ]
+            },
+            {
+                text: "你是否会因为伴侣与他人亲近而感到威胁？",
+                options: [
+                    { text: "从不感到威胁，信任伴侣的感情", score: 1, dimension: "jealousy" },
+                    { text: "偶尔会有一点，但很快就会消失", score: 2, dimension: "jealousy" },
+                    { text: "在特定情况下会感到不安", score: 3, dimension: "jealousy" },
+                    { text: "经常会感到威胁，需要伴侣的安慰", score: 4, dimension: "jealousy" },
+                    { text: "总是感到强烈的威胁，担心失去伴侣", score: 5, dimension: "jealousy" }
+                ]
+            },
+            {
+                text: "你是否会要求伴侣向你报告日常行踪？",
+                options: [
+                    { text: "从不要求，尊重伴侣的自由", score: 1, dimension: "control" },
+                    { text: "偶尔会询问，但不是必须的", score: 2, dimension: "control" },
+                    { text: "希望伴侣在外出时告知大致行程", score: 3, dimension: "control" },
+                    { text: "希望伴侣随时告知行踪", score: 4, dimension: "control" },
+                    { text: "要求伴侣详细报告所有行程和活动", score: 5, dimension: "control" }
+                ]
+            },
+            {
+                text: "当伴侣与前任保持联系时，你的感受是？",
+                options: [
+                    { text: "理解并接受，尊重伴侣的过去", score: 1, dimension: "jealousy" },
+                    { text: "有些好奇，但不会干涉", score: 2, dimension: "jealousy" },
+                    { text: "希望了解联系的原因和频率", score: 3, dimension: "jealousy" },
+                    { text: "感到不安，希望减少联系频率", score: 4, dimension: "jealousy" },
+                    { text: "强烈反对，要求完全断绝联系", score: 5, dimension: "jealousy" }
+                ]
+            },
+            {
+                text: "你是否会因为伴侣没有优先考虑你而感到受伤？",
+                options: [
+                    { text: "理解伴侣有其他责任和需求", score: 1, dimension: "dependency" },
+                    { text: "偶尔会有点失望，但能够理解", score: 2, dimension: "dependency" },
+                    { text: "经常会感到失望，希望得到更多关注", score: 3, dimension: "dependency" },
+                    { text: "感到受伤，认为伴侣应该优先考虑自己", score: 4, dimension: "dependency" },
+                    { text: "极度受伤，可能会因此产生冲突", score: 5, dimension: "dependency" }
+                ]
+            },
+            {
+                text: "你是否会试图影响伴侣的交友选择？",
+                options: [
+                    { text: "完全尊重伴侣的交友自由", score: 1, dimension: "control" },
+                    { text: "偶尔会分享对某些朋友的看法", score: 2, dimension: "control" },
+                    { text: "在特定情况下会表达担忧（如不良影响）", score: 3, dimension: "control" },
+                    { text: "经常会对伴侣的交友选择提出建议", score: 4, dimension: "control" },
+                    { text: "强烈希望伴侣只与自己认可的人交往", score: 5, dimension: "control" }
+                ]
+            },
+            {
+                text: "当伴侣专注于工作或爱好而忽略你时，你会？",
+                options: [
+                    { text: "理解并支持伴侣的兴趣和事业", score: 1, dimension: "dependency" },
+                    { text: "有些失落，但会给自己找事情做", score: 2, dimension: "dependency" },
+                    { text: "希望伴侣能分配更多时间给自己", score: 3, dimension: "dependency" },
+                    { text: "感到被忽视，可能会表达不满", score: 4, dimension: "dependency" },
+                    { text: "非常受伤，可能会干扰伴侣的活动", score: 5, dimension: "dependency" }
+                ]
+            },
+            {
+                text: "你是否会因为伴侣的异性朋友而产生冲突？",
+                options: [
+                    { text: "从不，完全信任伴侣", score: 1, dimension: "jealousy" },
+                    { text: "几乎不会，偶尔会有小分歧", score: 2, dimension: "jealousy" },
+                    { text: "有时会因为特定情况产生分歧", score: 3, dimension: "jealousy" },
+                    { text: "经常会因为伴侣的异性朋友产生冲突", score: 4, dimension: "jealousy" },
+                    { text: "几乎所有冲突都与伴侣的异性朋友有关", score: 5, dimension: "jealousy" }
+                ]
+            },
+            {
+                text: "你是否会要求伴侣在社交媒体上公开展示你们的关系？",
+                options: [
+                    { text: "尊重伴侣的隐私选择", score: 1, dimension: "control" },
+                    { text: "希望但不强制伴侣分享", score: 2, dimension: "control" },
+                    { text: "认为适度展示是对关系的重视", score: 3, dimension: "control" },
+                    { text: "希望伴侣经常分享两人的照片和动态", score: 4, dimension: "control" },
+                    { text: "要求伴侣必须公开所有关系细节", score: 5, dimension: "control" }
+                ]
+            },
+            {
+                text: "当伴侣与你分享个人想法和感受时，你会？",
+                options: [
+                    { text: "尊重并支持，给予积极反馈", score: 1, dimension: "trust" },
+                    { text: "认真倾听，偶尔给出建议", score: 2, dimension: "trust" },
+                    { text: "关注并参与讨论，但尊重伴侣的观点", score: 3, dimension: "trust" },
+                    { text: "希望伴侣的想法与自己一致", score: 4, dimension: "trust" },
+                    { text: "期望伴侣完全接受自己的观点", score: 5, dimension: "trust" }
+                ]
+            },
+            {
+                text: "你是否会因为伴侣没有立即回电话而感到不安？",
+                options: [
+                    { text: "理解并耐心等待", score: 1, dimension: "dependency" },
+                    { text: "稍微有点担心，但不会过度反应", score: 2, dimension: "dependency" },
+                    { text: "会再次拨打电话或发送消息", score: 3, dimension: "dependency" },
+                    { text: "感到焦虑，可能会不断尝试联系", score: 4, dimension: "dependency" },
+                    { text: "极度不安，可能会产生最坏的想象", score: 5, dimension: "dependency" }
+                ]
+            },
+            {
+                text: "你是否会对伴侣的过去情感经历感到好奇或不安？",
+                options: [
+                    { text: "完全尊重伴侣的过去，不介意", score: 1, dimension: "jealousy" },
+                    { text: "偶尔会好奇，但不会过多询问", score: 2, dimension: "jealousy" },
+                    { text: "希望了解基本情况，但不会深究", score: 3, dimension: "jealousy" },
+                    { text: "经常会询问细节，可能会感到不安", score: 4, dimension: "jealousy" },
+                    { text: "非常在意伴侣的过去，可能会因此产生冲突", score: 5, dimension: "jealousy" }
+                ]
+            },
+            {
+                text: "你是否会试图控制伴侣与家人或朋友相处的时间？",
+                options: [
+                    { text: "完全尊重伴侣与亲友相处的时间", score: 1, dimension: "control" },
+                    { text: "偶尔会希望伴侣多陪自己，但尊重选择", score: 2, dimension: "control" },
+                    { text: "希望伴侣能平衡与亲友和自己相处的时间", score: 3, dimension: "control" },
+                    { text: "经常希望伴侣减少与亲友相处的时间", score: 4, dimension: "control" },
+                    { text: "强烈希望伴侣优先与自己相处，减少与亲友的往来", score: 5, dimension: "control" }
+                ]
+            },
+            {
+                text: "当伴侣表达需要个人空间时，你会？",
+                options: [
+                    { text: "完全理解并支持", score: 1, dimension: "dependency" },
+                    { text: "理解并接受，虽然有点不舍", score: 2, dimension: "dependency" },
+                    { text: "有些犹豫，但最终会尊重伴侣的需求", score: 3, dimension: "dependency" },
+                    { text: "不太愿意，但可能会勉强同意", score: 4, dimension: "dependency" },
+                    { text: "强烈反对，认为这会影响两人的关系", score: 5, dimension: "dependency" }
+                ]
+            }
+        ];
+
+        // 结果分析数据
+        const resultAnalysis = {
+            low: {
+                title: "低占有欲",
+                summary: "你在恋爱关系中表现出较低的占有欲，能够给予伴侣充分的信任和自由空间。",
+                icon: "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/44c4db390bb845c8a34afd4f1ac40e54~tplv-a9rns2rl98-image.image?rcl=20251114212353A4D632152F7ABF1FEB72&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1765718673&x-signature=wQ00Q4HLW0OayzVE676cx5N6RBg%3D",
+                detailed: "你在恋爱关系中展现出健康的独立性和信任感。你能够尊重伴侣的个人空间和自由，不会过度干涉对方的生活。这种态度有助于建立平等、健康的恋爱关系，让双方都能保持自我认同和个人成长。然而，有时可能需要注意不要过于独立，适当表达关心和依赖可以增强亲密感。",
+                tips: [
+                    "适当表达对伴侣的关心和依赖，增强亲密感",
+                    "在重要决策上更多地考虑伴侣的感受和需求",
+                    "创造更多共同参与的活动和经历",
+                    "定期与伴侣分享内心想法和感受"
+                ]
+            },
+            moderate: {
+                title: "中等占有欲",
+                summary: "你在恋爱关系中表现出中等程度的占有欲，能够在关心伴侣和尊重个人空间之间取得较好的平衡。",
+                icon: "https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/69faf732e51843aeb448c4267cbd0f48~tplv-a9rns2rl98-image.image?rcl=20251114212353A4D632152F7ABF1FEB72&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1765718673&x-signature=abF89Hg0MKQ3wg%2BJpTQGGfW1SM4%3D",
+                detailed: "你在恋爱关系中展现出较为平衡的态度。你关心伴侣的感受和需求，同时也尊重对方的个人空间和自由。这种平衡有助于建立健康、稳定的恋爱关系。在某些情况下，你可能会感到不安或嫉妒，但通常能够理性处理这些情绪。你的占有欲程度在大多数情况下是健康的，但在压力或不安时可能需要注意不要过度反应。",
+                tips: [
+                    "在感到不安时，尝试通过沟通而非控制来解决问题",
+                    "培养自己的兴趣爱好，保持独立的生活圈",
+                    "学习更多关于健康恋爱关系的知识和技巧",
+                    "定期与伴侣进行深入的情感交流"
+                ]
+            },
+            high: {
+                title: "高占有欲",
+                summary: "你在恋爱关系中表现出较高的占有欲，可能需要更多的安全感和控制感。",
+                icon: "https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/878ee0169a4d4fa8af41d6237c481599~tplv-a9rns2rl98-image.image?rcl=20251114212353A4D632152F7ABF1FEB72&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1765718664&x-signature=ajNyArWhNOYZzaNvzt9o6ERNHi8%3D",
+                detailed: "你在恋爱关系中可能表现出较强的占有欲和控制倾向。你可能经常感到不安、嫉妒或需要确认伴侣的感情。这种态度可能源于过去的经历、不安全感或对亲密关系的强烈需求。虽然适度的占有欲可以表达关心和重视，但过度的占有欲可能会给伴侣带来压力，影响关系的健康发展。建议你关注自己的情绪需求，寻找更健康的方式来表达关心和建立安全感。",
+                tips: [
+                    "尝试培养更多的个人兴趣和社交圈，减少对伴侣的过度依赖",
+                    "学习情绪管理技巧，在感到不安时采取积极的应对策略",
+                    "与伴侣建立开放、诚实的沟通方式，分享你的感受而非指责",
+                    "考虑寻求专业心理咨询，探索不安全感的根源",
+                    "练习信任和放手，给伴侣适当的个人空间"
+                ]
+            }
+        };
+
+        // 维度分析数据
+        const dimensionAnalysis = {
+            dependency: {
+                low: "你在恋爱关系中保持着健康的独立性，不会过度依赖伴侣的关注和陪伴。你有自己的生活和兴趣，能够在独处时也感到满足。这种态度有助于建立平等、健康的关系。",
+                moderate: "你对伴侣有适度的情感依赖，能够在保持自我独立性的同时享受亲密关系。你重视与伴侣的相处时光，但也能够接受适当的分离。",
+                high: "你在恋爱关系中表现出较高的情感依赖，可能需要伴侣更多的关注和陪伴。独处时可能会感到不安或孤独，希望伴侣能够更多地参与你的生活。"
+            },
+            control: {
+                low: "你在恋爱关系中尊重伴侣的个人选择和自由，不会试图控制对方的行为或决定。你相信伴侣有能力做出正确的选择，这种信任有助于建立健康的关系。",
+                moderate: "你在关系中表现出一定的控制欲，但通常能够尊重伴侣的个人选择和自由。在某些情况下，你可能会希望伴侣按照你的期望行事，但能够接受不同意见。",
+                high: "你在恋爱关系中可能表现出较强的控制倾向，希望伴侣的行为和决定符合你的期望。你可能会对伴侣的穿着、社交或日常安排提出较多要求，这可能会给关系带来压力。"
+            },
+            jealousy: {
+                low: "你在恋爱关系中表现出较低的嫉妒倾向，能够信任伴侣的感情和忠诚。即使伴侣与异性互动，你也不会过度担心或怀疑。这种信任是健康关系的重要基础。",
+                moderate: "你在某些情况下会感到嫉妒，但通常能够理性处理这些情绪，不会过度反应。你可能会对伴侣与异性的密切互动感到好奇或轻微不安，但能够通过沟通而非指责来表达这些感受。",
+                high: "你在恋爱关系中可能经常感到嫉妒或不安，特别是当伴侣与异性互动时。这些情绪可能会导致你频繁检查伴侣的行踪或社交情况，给关系带来压力。"
+            },
+            trust: {
+                low: "你在恋爱关系中可能缺乏足够的信任，经常怀疑伴侣的动机或忠诚。这种态度可能源于过去的经历或个人不安全感，需要通过沟通和自我反思来改善。",
+                moderate: "你对伴侣有基本的信任，但在某些情况下可能会产生疑虑，需要更多的安全感。你可能会偶尔检查伴侣的行为或询问细节，但通常能够通过沟通解决疑虑。",
+                high: "你在恋爱关系中表现出高度的信任，完全相信伴侣的感情和忠诚。你尊重伴侣的个人空间和自由，不会过度干涉或怀疑。这种信任是健康、成熟关系的重要特征。"
+            }
+        };
+
+        // DOM元素
+        const welcomeSection = document.getElementById('welcome-section');
+        const testSection = document.getElementById('test-section');
+        const resultSection = document.getElementById('result-section');
+        const startTestBtn = document.getElementById('start-test-btn');
+        const questionNumber = document.getElementById('question-number');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const progressBar = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultScore = document.getElementById('result-score');
+        const resultTitle = document.getElementById('result-title');
+        const resultSummary = document.getElementById('result-summary');
+        const detailedAnalysis = document.getElementById('detailed-analysis');
+        const improvementTips = document.getElementById('improvement-tips');
+        const dependencyBar = document.getElementById('dependency-bar');
+        const dependencyText = document.getElementById('dependency-text');
+        const controlBar = document.getElementById('control-bar');
+        const controlText = document.getElementById('control-text');
+        const jealousyBar = document.getElementById('jealousy-bar');
+        const jealousyText = document.getElementById('jealousy-text');
+        const trustBar = document.getElementById('trust-bar');
+        const trustText = document.getElementById('trust-text');
+        const shareWechatBtn = document.getElementById('share-wechat');
+        const shareWeiboBtn = document.getElementById('share-weibo');
+        const saveResultBtn = document.getElementById('save-result');
+        const retakeTestBtn = document.getElementById('retake-test');
+        const shareModal = document.getElementById('share-modal');
+        const closeShareModal = document.getElementById('close-share-modal');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // 测试状态
+        let currentQuestion = 0;
+        const userAnswers = [];
+        const dimensionScores = {
+            dependency: 0,
+            control: 0,
+            jealousy: 0,
+            trust: 0
+        };
+
+        // 初始化移动端菜单
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 开始测试
+        startTestBtn.addEventListener('click', () => {
+            welcomeSection.classList.add('hidden');
+            testSection.classList.remove('hidden');
+            loadQuestion(currentQuestion);
+        });
+
+        // 加载问题
+        function loadQuestion(index) {
+            const question = questions[index];
+            questionNumber.textContent = index + 1;
+            questionText.textContent = question.text;
+            
+            // 清空选项容器
+            optionsContainer.innerHTML = '';
+            
+            // 添加选项
+            question.options.forEach((option, i) => {
+                const optionCard = document.createElement('div');
+                optionCard.className = `option-card p-4 border rounded-lg cursor-pointer ${userAnswers[index] === i ? 'selected' : ''}`;
+                optionCard.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center mr-3 ${userAnswers[index] === i ? 'border-primary bg-primary text-white' : ''}">
+                            ${userAnswers[index] === i ? '<i class="fa fa-check"></i>' : (i + 1)}
+                        </div>
+                        <span>${option.text}</span>
+                    </div>
+                `;
+                
+                optionCard.addEventListener('click', () => {
+                    selectOption(i);
+                });
+                
+                optionsContainer.appendChild(optionCard);
+            });
+            
+            // 更新进度条
+            progressBar.style.width = `${(index + 1) * 5}%`;
+            
+            // 更新导航按钮状态
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = userAnswers[index] === undefined;
+        }
+
+        // 选择选项
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestion] = optionIndex;
+            
+            // 更新选项样式
+            const optionCards = optionsContainer.querySelectorAll('.option-card');
+            optionCards.forEach((card, i) => {
+                if (i === optionIndex) {
+                    card.classList.add('selected');
+                    const radio = card.querySelector('.w-6');
+                    radio.classList.add('border-primary', 'bg-primary', 'text-white');
+                    radio.innerHTML = '<i class="fa fa-check"></i>';
+                } else {
+                    card.classList.remove('selected');
+                    const radio = card.querySelector('.w-6');
+                    radio.classList.remove('border-primary', 'bg-primary', 'text-white');
+                    radio.textContent = i + 1;
+                }
+            });
+            
+            // 启用下一题按钮
+            nextBtn.disabled = false;
+        }
+
+        // 上一题按钮
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion(currentQuestion);
+            }
+        });
+
+        // 下一题按钮
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion(currentQuestion);
+            } else {
+                // 计算结果
+                calculateResult();
+                // 显示结果
+                testSection.classList.add('hidden');
+                resultSection.classList.remove('hidden');
+                // 显示结果卡片动画
+                setTimeout(() => {
+                    const resultCards = document.querySelectorAll('.result-card');
+                    resultCards.forEach((card, i) => {
+                        setTimeout(() => {
+                            card.classList.add('show');
+                        }, i * 150);
+                    });
+                }, 300);
+            }
+        });
+
+        // 计算测试结果
+        function calculateResult() {
+            // 重置维度分数
+            for (const dimension in dimensionScores) {
+                dimensionScores[dimension] = 0;
+            }
+            
+            // 计算各维度分数
+            userAnswers.forEach((answerIndex, questionIndex) => {
+                const question = questions[questionIndex];
+                const selectedOption = question.options[answerIndex];
+                dimensionScores[selectedOption.dimension] += selectedOption.score;
+            });
+            
+            // 计算总分 (0-100)
+            const totalScore = Object.values(dimensionScores).reduce((sum, score) => sum + score, 0);
+            const normalizedScore = Math.round((totalScore / (questions.length * 5)) * 100);
+            
+            // 更新结果显示
+            animateScore(normalizedScore);
+            
+            // 确定结果类型
+            let resultType;
+            if (normalizedScore < 35) {
+                resultType = 'low';
+            } else if (normalizedScore < 70) {
+                resultType = 'moderate';
+            } else {
+                resultType = 'high';
+            }
+            
+            // 更新结果内容
+            const result = resultAnalysis[resultType];
+            resultTitle.textContent = result.title;
+            resultSummary.textContent = result.summary;
+            detailedAnalysis.textContent = result.detailed;
+            
+            // 更新改善建议
+            improvementTips.innerHTML = '';
+            result.tips.forEach(tip => {
+                const tipElement = document.createElement('div');
+                tipElement.className = 'flex items-start';
+                tipElement.innerHTML = `
+                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary bg-opacity-20 flex items-center justify-center mr-3 mt-0.5">
+                        <i class="fa fa-check text-primary text-sm"></i>
+                    </div>
+                    <p class="text-gray-700">${tip}</p>
+                `;
+                improvementTips.appendChild(tipElement);
+            });
+            
+            // 更新维度分析
+            updateDimensionAnalysis('dependency', dimensionScores.dependency, 5);
+            updateDimensionAnalysis('control', dimensionScores.control, 5);
+            updateDimensionAnalysis('jealousy', dimensionScores.jealousy, 5);
+            // 信任维度需要反转分数（分数越高表示信任度越低）
+            const trustScore = 5 - (dimensionScores.trust / 5);
+            updateDimensionAnalysis('trust', trustScore * 5, 5, true);
+        }
+
+        // 更新维度分析
+        function updateDimensionAnalysis(dimension, score, maxScore, isReversed = false) {
+            const percentage = Math.round((score / maxScore) * 100);
+            const barElement = document.getElementById(`${dimension}-bar`);
+            const textElement = document.getElementById(`${dimension}-text`);
+            
+            // 动画显示进度条
+            setTimeout(() => {
+                barElement.style.width = `${percentage}%`;
+            }, 500);
+            
+            // 确定维度级别
+            let level;
+            if (isReversed) {
+                // 信任维度：分数越低表示信任度越高
+                if (percentage < 35) {
+                    level = 'high';
+                } else if (percentage < 70) {
+                    level = 'moderate';
+                } else {
+                    level = 'low';
+                }
+            } else {
+                // 其他维度：分数越高表示程度越高
+                if (percentage < 35) {
+                    level = 'low';
+                } else if (percentage < 70) {
+                    level = 'moderate';
+                } else {
+                    level = 'high';
+                }
+            }
+            
+            // 更新文本内容
+            textElement.textContent = dimensionAnalysis[dimension][level];
+        }
+
+        // 分数动画
+        function animateScore(targetScore) {
+            let currentScore = 0;
+            const interval = setInterval(() => {
+                currentScore += 1;
+                resultScore.textContent = currentScore;
+                if (currentScore >= targetScore) {
+                    clearInterval(interval);
+                }
+            }, 20);
+        }
+
+        // 分享功能
+        shareWechatBtn.addEventListener('click', () => {
+            shareModal.classList.remove('hidden');
+        });
+
+        shareWeiboBtn.addEventListener('click', () => {
+            shareModal.classList.remove('hidden');
+        });
+
+        closeShareModal.addEventListener('click', () => {
+            shareModal.classList.add('hidden');
+        });
+
+        // 保存结果
+        saveResultBtn.addEventListener('click', () => {
+            alert('结果已保存到本地！');
+        });
+
+        // 重新测试
+        retakeTestBtn.addEventListener('click', () => {
+            // 重置测试状态
+            currentQuestion = 0;
+            userAnswers.length = 0;
+            for (const dimension in dimensionScores) {
+                dimensionScores[dimension] = 0;
+            }
+            
+            // 重置结果显示
+            resultScore.textContent = '0';
+            const resultCards = document.querySelectorAll('.result-card');
+            resultCards.forEach(card => {
+                card.classList.remove('show');
+            });
+            
+            // 返回测试开始
+            resultSection.classList.add('hidden');
+            testSection.classList.remove('hidden');
+            loadQuestion(currentQuestion);
+        });
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', (e) => {
+            if (e.target === shareModal) {
+                shareModal.classList.add('hidden');
+            }
+        });
+
+        // 导航链接事件
+        document.getElementById('nav-about').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('恋爱占有欲测试是一个基于心理学研究的情感评估工具，旨在帮助人们更好地了解自己在恋爱关系中的行为模式和情感需求。');
+        });
+
+        document.getElementById('nav-faq').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('常见问题：\n1. 测试结果准确吗？ - 本测试仅供参考，不构成专业心理咨询建议。\n2. 测试需要多长时间？ - 通常需要5-8分钟完成。\n3. 我的数据安全吗？ - 我们重视用户隐私，所有测试数据仅用于生成结果分析。');
+        });
+
+        document.getElementById('nav-contact').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('联系我们：\n邮箱：contact@lovetest.com\n微信：LoveTest_Official');
+        });
+    </script>
+</body>
+</html>
